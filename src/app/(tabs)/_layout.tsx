@@ -1,56 +1,23 @@
-import { Tabs } from "expo-router";
-import React from "react";
-
-import { TabBarIcon } from "@components/navigation/TabBarIcon";
-import { Colors } from "@constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { View, Text } from 'react-native'
+import { Redirect, Stack, Tabs, withLayoutContext } from 'expo-router';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react'
 
 export default function TabLayout() {
-	const colorScheme = useColorScheme();
-
 	return (
-		<Tabs
-			screenOptions={{
-				tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-				headerShown: false,
-			}}
-		>
+		<Tabs>
 			<Tabs.Screen
-				name="index"
-				options={{
-					title: "Connect",
-					tabBarIcon: ({ color, focused }) => (
-						<TabBarIcon
-							name={focused ? "wallet" : "wallet-outline"}
-							color={color}
-						/>
-					),
-				}}
+				name="home"
+				options={{ title: 'Home' }}
 			/>
 			<Tabs.Screen
-				name="read"
-				options={{
-					title: "Read",
-					tabBarIcon: ({ color, focused }) => (
-						<TabBarIcon
-							name={focused ? "reader" : "reader-outline"}
-							color={color}
-						/>
-					),
-				}}
+				name="post"
+				options={{ title: 'Post' }}
 			/>
 			<Tabs.Screen
-				name="write"
-				options={{
-					title: "Write",
-					tabBarIcon: ({ color, focused }) => (
-						<TabBarIcon
-							name={focused ? "code-slash" : "code-slash-outline"}
-							color={color}
-						/>
-					),
-				}}
+				name="profile"
+				options={{ title: 'Profile' }}
 			/>
 		</Tabs>
-	);
+  );
 }
