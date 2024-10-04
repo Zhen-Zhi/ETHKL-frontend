@@ -1,9 +1,6 @@
 import { StyleSheet, Text, View, StatusBar, FlatList, Image, Button, TouchableOpacity } from 'react-native'
 import React from 'react'
 import AnimatedPressable from '@/src/components/AnimatedPressable';
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Entypo from '@expo/vector-icons/Entypo';
 import PostComponent from '@/src/components/PostComponent';
 
 const DATA = [
