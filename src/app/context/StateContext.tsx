@@ -41,9 +41,6 @@ export const StateContextProvider = ({ children }: StateContextProviderProps) =>
     params: [0n]
   });
 
-  console.log(reviews)
-
-
   // Check for errors in the contract call
   if (error) {
     console.error("Error fetching reviews:", error);
