@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList, TouchableOpacity, Animated, Modal, Image, TouchableWithoutFeedback, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList, TouchableOpacity, Animated, Modal, Image, TouchableWithoutFeedback, Pressable, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Entypo from '@expo/vector-icons/Entypo';
 import AnimatedPressable from '@/src/components/AnimatedPressable';
 import * as ImagePicker from 'expo-image-picker';
 import { decode } from 'base64-arraybuffer';
@@ -44,7 +45,17 @@ const PostScreen: React.FC = () => {
   
     if (!result.canceled) {
       // Store all selected images' URIs in an array
-      setImage(result.assets.map((asset) => asset.uri));
+      setImage((prevImages) => [
+        ...(prevImages ?? []), // If prevImages is null, use an empty array
+        ...result.assets.map((asset) => asset.uri)
+      ]);
+      // setImage(result.assets.map((asset) => asset.uri));
+    }
+  };
+
+  const removeImage = (uri: string) => {
+    if(image) {
+      setImage(image.filter((image) => image !== uri));  // Filter out the image to be removed
     }
   };
 
@@ -104,8 +115,8 @@ const PostScreen: React.FC = () => {
         presentationStyle='overFullScreen'
       >
         <Pressable onPress={() => setModalVisible(false)} className='bg-black/30 flex-1 justify-end'>
-          <View className='bg-white rounded-t-3xl p-4'>
-            <Text className='' style={styles.sectionHeader}>Dummy Res</Text>
+          <Pressable onPress={(event) => event.stopPropagation()} className='bg-white rounded-t-3xl p-4'>
+            <Text className='my-auto' style={styles.sectionHeader}>Dummy Res</Text>
 
             {/* Star Rating Component */}
             <View style={styles.ratingContainer}>
@@ -116,34 +127,46 @@ const PostScreen: React.FC = () => {
               ))}
             </View>
 
-            { image ?
-              // <Image
-              //   className='w-48 h-48 aspect-square rounded-xl mx-auto mt-6'
-              //   source={{ uri: image }}
-              // />
+            { image && image.length > 0 ?
               <FlatList
                 data={image}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                  <Image
-                    source={{ uri: item }}
-                    style={{ width: 100, height: 100, margin: 5 }}  // Adjust size as needed
-                  />
+                  <View>
+                    <ImageBackground
+                      source={{ uri: item }}
+                      style={{ width: 100, height: 100, margin: 5 }}  // Adjust size as needed
+                    >
+                      <AnimatedPressable
+                        pressInValue={0.95}
+                        className='rounded-full bg-white w-[24px]'
+                        onPress={() => removeImage(item)}
+                      >
+                        <Entypo name="cross" size={24} color="black" />
+                      </AnimatedPressable>
+                    </ImageBackground>
+                  </View>
                 )}
                 numColumns={3}  // Display images in a grid of 3 columns
               />
               :
-              <Image
-              className='w-48 h-48 aspect-square rounded-xl mx-auto mt-6'
-              source={require('@asset/images/title.png')}
-              />
+              <AnimatedPressable 
+                pressInValue={0.95} 
+                className='mx-auto border border-slate-300 py-8 px-12 rounded-lg'
+                onPress={pickImage}
+              >
+                <MaterialIcons name="photo-camera" size={56} color="black" />
+              </AnimatedPressable>
             }
 
-            <AnimatedPressable pressInValue={0.98} onPress={pickImage} className='border mt-4' >
-              <Text className='font-bold text-xl text-center mt-2.5'>Upload Image</Text>
+            <AnimatedPressable pressInValue={0.98} onPress={pickImage} className='' >
+              <Text className='font-bold text-xl text-center mt-2.5 text-blue-500'>Upload Image</Text>
             </AnimatedPressable>
 
             <View style={styles.inputContainer}>
+              <Text className='text-lg font-semibold m-1'>
+                Provide your review here
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Write your review..."
@@ -152,17 +175,17 @@ const PostScreen: React.FC = () => {
                 onChangeText={(text) => setNewReview({ ...newReview, text, rating: newReview.rating })}
               />
             </View>
-            <View className='flex border'>
+            <View className='mt-6'>
               <AnimatedPressable
-                className='bg-blue-500 px-3 rounded-lg'
+                className='bg-blue-500 p-3 rounded-lg'
                 pressInValue={0.9}
                 // onPress={handleSubmitReview}
                 >
-                <Text className='font-semibold text-lg text-white'>Post Review</Text>
+                <Text className='font-semibold text-lg text-white text-center'>Post Review</Text>
               </AnimatedPressable>
             </View>
             
-          </View>
+          </Pressable>
         </Pressable>
       </Modal>
     </View>
@@ -261,7 +284,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   inputContainer: {
-    marginTop: 10,
+    marginTop: 15,
   },
   input: {
     borderColor: '#ccc',
@@ -269,6 +292,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    height: 100,
+    textAlignVertical: 'top',
+    fontSize: 16,
   },
   closeButton: {
     alignSelf: 'flex-end',
