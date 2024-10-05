@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList, TouchableOpacity, Animated, Modal, Image, TouchableWithoutFeedback, Pressable, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList, TouchableOpacity, Animated, Modal, Image, TouchableWithoutFeedback, Pressable, ImageBackground, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -89,7 +89,7 @@ const PostScreen: React.FC = () => {
       <Text className='font-extrabold text-2xl mx-1 mb-3'>Select a restaurant</Text>
       {posts.map(post => (
         <AnimatedPressable 
-          className='flex-1 border mb-5 rounded-3xl' 
+          className='flex-1 border border-slate-400 mb-5 rounded-3xl' 
           pressInValue={0.98} 
           key={post.id}
           onPress={() => setModalVisible(true)}
@@ -115,7 +115,7 @@ const PostScreen: React.FC = () => {
         presentationStyle='overFullScreen'
       >
         <Pressable onPress={() => setModalVisible(false)} className='bg-black/30 flex-1 justify-end'>
-          <Pressable onPress={(event) => event.stopPropagation()} className='bg-white rounded-t-3xl p-4'>
+          <Pressable onPress={(event) => {event.stopPropagation();Keyboard.dismiss()}} className='bg-white rounded-t-3xl p-4'>
             <Text className='my-auto' style={styles.sectionHeader}>Dummy Res</Text>
 
             {/* Star Rating Component */}
