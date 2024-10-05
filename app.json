@@ -68,20 +68,26 @@
             ]
           }
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
-      "tsconfigPaths" : true
+      "tsconfigPaths": true
     },
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "d2cbf273-4427-47c4-9fd6-e02fb23e0d58"
+        "projectId": "ac5d4051-63a5-4f2a-86c1-66ef9ee5bc37"
       }
     },
-    "owner": "zhenzhi"
+    "owner": "zivxyoung"
   }
 }

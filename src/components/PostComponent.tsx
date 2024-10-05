@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, FlatList, Dimensions } from 'react-native'
 import React from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -35,6 +35,15 @@ const PostComponent = ({
     );
   }
 
+  const imageArray = [
+    require('@asset/images/title.png'),
+    require('@asset/images/title.png'),
+    require('@asset/images/title.png'), // You can duplicate or use different paths here
+    require('@asset/images/title.png'),
+  ];
+
+  const { width } = Dimensions.get('window');
+
   return (
     <View className='pb-6 bg-slate-100'>
       <View className='flex-row my-2.5'>
@@ -47,10 +56,28 @@ const PostComponent = ({
           <Text className='my-auto leading-[14px] font-normal'>Lv 1</Text>
         </View>
       </View>
-      <Image 
+
+      {/* FlatList for swiping images */}
+      <FlatList 
+        data={imageArray} // Pass the array of images to FlatList
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={true}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <Image
+            style={{ width: width }}
+            className='h-64'
+            source={item}
+          />
+        )}
+      />
+
+      {/* <Image 
         className='w-full h-64'
         source={require('@asset/images/title.png')} 
-      />
+      /> */}
+
       <View className='mx-4 my-2'>
         <View className='flex-row justify-between mb-2'>
           <View className='flex-row'>
