@@ -14,6 +14,7 @@ import {
   useDisconnect,
   useActiveWallet,
   ConnectButton,
+  useConnectedWallets,
   lightTheme,
   ConnectEmbed,
 } from "thirdweb/react";
@@ -38,11 +39,21 @@ const StyledImage = styled(Image)
 const Profile = () => {
   const address = useActiveAccount();
 
-  // Dummy data with image sources and XP calculation
+  // Function to calculate XP for a given level
+  const calculateXp = (level: number) => {
+    return 2 * Math.pow(2, level - 1);
+  };
+
+  // Function to calculate max XP for the next level
+  const calculateMaxXp = (level: number) => { 
+    return calculateXp(level + 1);
+  };
+
+  // Dummy data with dynamic XP calculation
   const profileData = {
-    level: 5,
-    xp: 32, // 2 * (2^(5-1)) = 32 for level 5
-    maxXp: 64, // 2 * (2^5) = 64 for next level
+    level: 1,
+    get xp() { return calculateXp(this.level); },
+    get maxXp() { return calculateMaxXp(this.level); },
     badges: [
       { name: 'Tier 1 Badge', image: require('@asset/images/badge1.png') },
       { name: 'Tier 2 Badge', image: require('@asset/images/badge1.png') },
@@ -50,13 +61,33 @@ const Profile = () => {
     ],
     vouchers: [
       { name: '20% off McDonalds', image: require('@asset/images/mcdonalds.png') },
-      { name: 'Tier 2 Badge', image: require('@asset/images/mcdonalds.png') },
-      { name: 'Tier 3 Badge', image: require('@asset/images/mcdonalds.png') }
+      { name: '20% off McDonalds', image: require('@asset/images/mcdonalds.png') },
+      { name: '20% off McDonalds', image: require('@asset/images/mcdonalds.png') }
     ]
   };
 
   // Calculate XP percentage for the progress bar
   const xpPercentage = (profileData.xp / profileData.maxXp) * 100;
+
+  const wallets = [
+    inAppWallet({
+      auth: {
+        options: [
+          "google",
+          "telegram",
+          "email",
+          "x",
+          "passkey",
+          "phone",
+        ],
+      },
+    }),
+    createWallet("io.metamask"),
+    createWallet("com.coinbase.wallet"),
+    createWallet("me.rainbow"),
+    createWallet("io.rabby"),
+    createWallet("io.zerion.wallet"),
+  ];
 
   return (
     <StyledScrollView className="flex-1 bg-gray-100">
@@ -65,12 +96,18 @@ const Profile = () => {
         <StyledView className="mb-3">
           <StyledText className="font-bold text-blue-500">Wallet Address:</StyledText>
           {address ? (
-            <StyledText className="mt-1">{address?.address}</StyledText>
+            <StyledText className="my-2">{shortenAddress(address?.address)}</StyledText>
           ) : (
             <StyledText className="my-2">Not connected</StyledText>
           )}
-          <ConnectButton
+         <ConnectButton
             client={client}
+            wallets={wallets}
+            theme={lightTheme({
+              colors: { primaryButtonBg: "#3b82f6" },
+            })}
+            connectModal={{ size: "compact", showThirdwebBranding: false, }}
+            
           />
         </StyledView>
         <StyledView className="mb-3">
@@ -94,7 +131,7 @@ const Profile = () => {
         <StyledView key={index} className="bg-white rounded-lg p-5 mx-5 mb-3 shadow-md flex-col items-center">
           <StyledImage 
             source={badge.image} 
-            className="w-60 h-60 mr-3 mb-2"
+            className="w-60 h-60 mr-3 mb-2 rounded-full"
           />
           <StyledText>{badge.name}</StyledText>
           <StyledTouchableOpacity
