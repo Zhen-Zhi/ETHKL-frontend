@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import { Redirect, Stack, Tabs, withLayoutContext } from 'expo-router';
 import React from 'react'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useConnect, useActiveAccount } from 'thirdweb/react';
 import { ThemedButton } from '@/src/components/ThemedButton';
 import { client } from '@/src/constants/thirdweb';
 import { createWallet } from 'thirdweb/wallets';
 import AnimatedPressable from '@/src/components/AnimatedPressable';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabLayout() {
 	const ConnectWithMetaMask = () => {
@@ -37,7 +37,7 @@ export default function TabLayout() {
 				name="home"
 				options={{ 
 					title: 'Home',
-					tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
+					tabBarIcon: ({ color }: { color: string }) => <FontAwesome size={28} name="home" color={color} />,
 					headerRight: () => <ConnectWithMetaMask />,
 				}}
 			/>
@@ -45,14 +45,14 @@ export default function TabLayout() {
 				name="post"
 				options={{ 
 					title: 'Post',
-					tabBarIcon: ({ color }) => <FontAwesome name="plus-square-o" size={28} color={color} />,
+					tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="plus-square-o" size={28} color={color} />,
 				}}
 			/>
 			<Tabs.Screen
 				name="profile"
 				options={{ 
 					title: 'Profile',
-					tabBarIcon: ({ color }) => <FontAwesome name="user" size={28} color={color} />,
+					tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="user" size={28} color={color} />,
 				}}
 			/>
 		</Tabs>
