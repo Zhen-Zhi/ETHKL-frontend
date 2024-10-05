@@ -4,8 +4,11 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import AnimatedPressable from '@/src/components/AnimatedPressable';
 import * as ImagePicker from 'expo-image-picker';
+import { getContract, createThirdwebClient, resolveMethod, defineChain } from "thirdweb";
 import { decode } from 'base64-arraybuffer';
 import * as FileSystem from 'expo-file-system'
+import { scrollSepoliaTestnet } from 'thirdweb/chains';
+import { useReadContract } from 'thirdweb/react';
 
 interface Post {
   id: number;
@@ -20,14 +23,14 @@ interface Review {
   rating: number; // Add rating to the Review interface
 }
 
-const PostScreen: React.FC = () => {
+const PostScreen = () => {
   const posts: Post[] = [
     { id: 1, restaurant: 'Restaurant 1', description: 'Delicious food with great ambiance.' },
     { id: 2, restaurant: 'Restaurant 2', description: 'Amazing sushi and friendly staff.' },
-    { id: 3, restaurant: 'Restaurant 3', description: 'Best pizza in town!' },
-    { id: 4, restaurant: 'Restaurant 4', description: 'Asam Pedas the best!' },
-    { id: 5, restaurant: 'Restaurant 5', description: 'Best pizza in town!' },
-    // { id: 6, restaurant: 'Restaurant 6', description: 'Asam Pedas the best!' },
+    // { id: 3, restaurant: 'Restaurant 3', description: 'Best pizza in town!' },
+    // { id: 4, restaurant: 'Restaurant 4', description: 'Asam Pedas the best!' },
+    // { id: 5, restaurant: 'Restaurant 5', description: 'Best pizza in town!' },
+    // // { id: 6, restaurant: 'Restaurant 6', description: 'Asam Pedas the best!' },
   ];
 
   const [newReview, setNewReview] = useState({ text: '', imageUrl: '', rating: 0 });
@@ -58,25 +61,6 @@ const PostScreen: React.FC = () => {
       setImage(image.filter((image) => image !== uri));  // Filter out the image to be removed
     }
   };
-
-  // const uploadImage = async () => {
-  //   if (!image?.startsWith('file://')) {
-  //     return;
-  //   }
-  
-  //   const base64 = await FileSystem.readAsStringAsync(image, {
-  //     encoding: 'base64',
-  //   });
-  //   const filePath = `${randomUUID()}.png`;
-  //   const contentType = 'image/png';
-  //   const { data, error } = await supabase.storage
-  //     .from('avatars')
-  //     .upload(filePath, decode(base64), { contentType });
-  
-  //   if (data) {
-  //     return data.path;
-  //   }
-  // };
 
   // Function to handle star rating selection
   const handleRating = (value: number) => {
