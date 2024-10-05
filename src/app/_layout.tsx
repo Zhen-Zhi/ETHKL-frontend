@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { ThirdwebProvider } from "thirdweb/react";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { StateContextProvider } from "./context/StateContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,10 +34,12 @@ export default function RootLayout() {
 	return (
 		<ThirdwebProvider>
 			<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-				<Stack>
-					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-					<Stack.Screen name="+not-found" />
-				</Stack>
+				<StateContextProvider>
+					<Stack>
+						<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+						<Stack.Screen name="+not-found" />
+					</Stack>
+				</StateContextProvider>
 			</ThemeProvider>
 		</ThirdwebProvider>
 	);
